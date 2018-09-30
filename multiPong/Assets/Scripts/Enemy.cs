@@ -16,10 +16,12 @@ public class Enemy : MonoBehaviour
     private GameObject ball;
 
     private GameManager gameManager;
+    private GameObject leftSide;
 
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        leftSide = GameObject.Find("Player");
     }
 
     void Update()
@@ -29,10 +31,19 @@ public class Enemy : MonoBehaviour
         else if (!player2)
             AIMovement();
 
-        if (gameManager.startedFromP1)
+        if (gameManager.startedFromP1 || gameManager.startedFromAI)
             player2 = false;
-        else if (!gameManager.startedFromP1)
+        else if (!gameManager.startedFromP1 && !gameManager.startedFromAI)
             player2 = true;
+
+        if (gameManager.startedFromAI)
+        {
+
+            leftSide.GetComponent<PlayerMovement>().enabled = false;
+            leftSide.GetComponent<Player>().enabled = false;
+            leftSide.GetComponent<EnemyMovement>().enabled = true;
+            leftSide.GetComponent<Enemy>().enabled = true;
+        }
 
         Bounds();
     }

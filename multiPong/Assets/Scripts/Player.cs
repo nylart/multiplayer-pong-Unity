@@ -9,11 +9,12 @@ public class Player : MonoBehaviour
 
     private float upBound = 4f;
     private float speed = 0.15f;
-
+    private GameManager gameManager;
     Transform playerTransform;
 
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         playerTransform = transform;
         previousPositionY = transform.position.y;
     }
@@ -21,19 +22,28 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
-            MoveUp();
-        else if (Input.GetKey(KeyCode.S))
-            MoveDown();
+        if (gameManager.startedFromP1)
+        {
+            if (Input.GetKey(KeyCode.W))
+                MoveUp();
+            else if (Input.GetKey(KeyCode.S))
+                MoveDown();
 
-        Bounds();
 
-        if (previousPositionY > transform.position.y)
-            direction = -1;
-        else if (previousPositionY < transform.position.y)
-            direction = 1;
-        else
-            direction = 0;
+            Bounds();
+
+            if (previousPositionY > transform.position.y)
+                direction = -1;
+            else if (previousPositionY < transform.position.y)
+                direction = 1;
+            else
+                direction = 0;
+        }
+        else if (gameManager.startedFromAI)
+        {
+            gameObject.GetComponent<Enemy>().enabled = true;
+            gameObject.GetComponent<EnemyMovement>().enabled = true;
+        }
     }
 
     void LateUpdate()

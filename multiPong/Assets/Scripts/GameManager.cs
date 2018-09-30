@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public bool startedFromP1;
+    public bool startedFromAI;
 
     void Awake()
     {
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Button player1Btn, player2Btn, rightUp, rightDown;
+    private Button player1Btn, player2Btn, AIbtn, rightUp, rightDown, leftUp, leftDown;
 
     // Update is called once per frame
     void Update()
@@ -48,6 +49,12 @@ public class GameManager : MonoBehaviour
                 player2Btn.onClick.AddListener(VSPlayer2);
             }
 
+            if (!AIbtn)
+            {
+                AIbtn = GameObject.Find("AIvAI").GetComponent<Button>();
+                AIbtn.onClick.AddListener(AI);
+            }
+
         }
 
         if (SceneManager.GetActiveScene().buildIndex == 1)
@@ -58,11 +65,23 @@ public class GameManager : MonoBehaviour
             if (!rightUp)
                 rightUp = GameObject.Find("RightUp").GetComponent<Button>();
 
+            if (!leftDown)
+                leftDown = GameObject.Find("LeftDown").GetComponent<Button>();
+
+            if (!leftUp)
+                leftUp = GameObject.Find("LeftUp").GetComponent<Button>();
 
             if (startedFromP1)
             {
                 rightDown.gameObject.SetActive(false);
                 rightUp.gameObject.SetActive(false);
+            }
+            else if (startedFromAI)
+            {
+                rightDown.gameObject.SetActive(false);
+                rightUp.gameObject.SetActive(false);
+                leftDown.gameObject.SetActive(false);
+                leftUp.gameObject.SetActive(false);
             }
             else
             {
@@ -83,6 +102,13 @@ public class GameManager : MonoBehaviour
     void VSPlayer2()
     {
         startedFromP1 = false;
+        SceneManager.LoadScene("Gameplay");
+    }
+
+    void AI()
+    {
+        startedFromP1 = false;
+        startedFromAI = true;
         SceneManager.LoadScene("Gameplay");
     }
 
